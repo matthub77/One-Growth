@@ -1,0 +1,12 @@
+# Netlify config — this is what prevents the 404.
+# The site is plain HTML in the repo root, with no build step.
+
+[build]
+  publish = "."
+  command = ""
+
+# Send unknown paths back to the single page instead of Netlify's 404.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
