@@ -78,6 +78,7 @@ a:hover { text-decoration: underline; }
   color: var(--brand-deep);
 }
 .eyebrow--light { color: #7fd8ff; }
+.eyebrow--plain { text-transform: none; letter-spacing: .01em; font-size: .95rem; color: var(--ink-soft); }
 
 .grad {
   background: var(--grad);
@@ -205,11 +206,11 @@ a:hover { text-decoration: underline; }
     linear-gradient(180deg, #fbfdff, #ffffff 60%);
 }
 
-.hero__inner { max-width: 880px; }
+.hero__inner { max-width: 940px; }
 
 .hero__title {
-  font-size: clamp(2.8rem, 8vw, 5rem);
-  line-height: 1.03;
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
+  line-height: 1.05;
   letter-spacing: -.03em;
   font-weight: 700;
   margin: 18px 0 22px;
@@ -228,7 +229,7 @@ a:hover { text-decoration: underline; }
   margin-bottom: 20px;
 }
 
-.hero__note { font-size: .9rem; color: var(--ink-faint); }
+.hero__note { font-size: .98rem; color: var(--ink-soft); font-weight: 500; }
 
 .scroll-cue {
   position: absolute; left: 50%; bottom: 34px;
