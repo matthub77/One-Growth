@@ -142,7 +142,8 @@ a:hover { text-decoration: underline; }
   letter-spacing: -.01em;
 }
 .brand:hover { text-decoration: none; }
-.brand__mark { width: 28px; height: 28px; border-radius: 8px; }
+.brand__mark { width: 28px; height: 28px; border-radius: 8px; transition: transform .35s var(--ease); }
+.brand:hover .brand__mark { transform: rotate(-8deg) scale(1.06); }
 
 .nav__links {
   display: flex; gap: 26px;
@@ -199,12 +200,24 @@ a:hover { text-decoration: underline; }
   overflow: hidden;
 }
 .hero__scrim {
-  position: absolute; inset: 0; z-index: -1;
+  position: absolute; inset: -6%; z-index: -1;
   background:
     radial-gradient(60% 55% at 50% 0%, rgba(0,113,227,.10), transparent 70%),
     radial-gradient(45% 40% at 85% 15%, rgba(0,196,180,.10), transparent 70%),
     linear-gradient(180deg, #fbfdff, #ffffff 60%);
+  animation: drift 24s ease-in-out infinite alternate;
 }
+@keyframes drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-1.4%, 1.2%) scale(1.03); }
+}
+
+/* Hero elements cascade in one after another instead of arriving as a block */
+.hero__inner > .reveal:nth-child(1) { transition-delay: 0ms;   }
+.hero__inner > .reveal:nth-child(2) { transition-delay: 90ms;  }
+.hero__inner > .reveal:nth-child(3) { transition-delay: 180ms; }
+.hero__inner > .reveal:nth-child(4) { transition-delay: 270ms; }
+.hero__inner > .reveal:nth-child(5) { transition-delay: 350ms; }
 
 .hero__inner { max-width: 960px; }
 
@@ -313,7 +326,9 @@ a:hover { text-decoration: underline; }
   border-radius: var(--radius);
   padding: 30px 26px;
   box-shadow: var(--shadow-sm);
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
 }
+.stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
 .stat-card h3 {
   font-size: 1.16rem; font-weight: 700; letter-spacing: -.01em;
   margin-bottom: 8px;
@@ -348,7 +363,10 @@ a:hover { text-decoration: underline; }
 .journey::before {
   content: ""; position: absolute; left: 9%; right: 9%; top: 18px; height: 2px;
   background: var(--line);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 1.1s var(--ease);
 }
+.journey.is-visible::before { transform: scaleX(1); }
 .journey li { position: relative; text-align: center; }
 .journey__step {
   position: relative; z-index: 1;
@@ -373,9 +391,13 @@ a:hover { text-decoration: underline; }
   padding: 9px 15px;
   font-size: .9rem; font-weight: 500;
   background: var(--bg); white-space: nowrap;
+  transition: border-color .3s ease, color .3s ease;
 }
 .chain li:not(:last-child)::after {
   content: "→"; margin-left: 10px; color: var(--ink-faint); font-weight: 400;
+}
+.chain.is-visible li:hover {
+  border-color: var(--brand); color: var(--brand-deep);
 }
 
 /* ---------- Ladder (reporting stages) ---------- */
@@ -395,10 +417,51 @@ a:hover { text-decoration: underline; }
   transform: translateX(-50%);
   color: var(--ink-faint); font-size: 1rem;
 }
+.ladder.is-visible li + li::before { animation: flow 2s ease-in-out infinite; }
+@keyframes flow {
+  0%, 100% { transform: translate(-50%, 0); opacity: .55; }
+  50%      { transform: translate(-50%, 4px); opacity: 1; }
+}
 .section--dark .ladder li {
   background: #141417; border-color: #26262b; color: #ededf0;
 }
 .section--dark .ladder li + li::before { color: #6e6e73; }
+
+/* ---------- Staggered entrance for grouped elements ----------
+   The group itself (already a .reveal) becomes the trigger; each
+   item animates independently and in sequence once it's visible. */
+.stat-grid.reveal, .steps.reveal, .journey.reveal,
+.chain.reveal, .ladder.reveal, .trust__list.reveal {
+  opacity: 1 !important; transform: none !important;
+}
+.stat-grid .stat-card,
+.steps .step,
+.journey > li,
+.chain > li,
+.ladder > li,
+.trust__list li {
+  opacity: 0; transform: translateY(14px);
+  transition: opacity .55s var(--ease), transform .55s var(--ease);
+}
+.stat-grid.is-visible .stat-card,
+.steps.is-visible .step,
+.journey.is-visible > li,
+.chain.is-visible > li,
+.ladder.is-visible > li,
+.trust__list.is-visible li {
+  opacity: 1; transform: none;
+}
+.stat-grid .stat-card:nth-child(1),  .steps .step:nth-child(1),  .journey>li:nth-child(1),  .chain>li:nth-child(1),  .ladder>li:nth-child(1),  .trust__list li:nth-child(1)  { transition-delay: 0ms;   }
+.stat-grid .stat-card:nth-child(2),  .steps .step:nth-child(2),  .journey>li:nth-child(2),  .chain>li:nth-child(2),  .ladder>li:nth-child(2),  .trust__list li:nth-child(2)  { transition-delay: 60ms;  }
+.stat-grid .stat-card:nth-child(3),  .steps .step:nth-child(3),  .journey>li:nth-child(3),  .chain>li:nth-child(3),  .ladder>li:nth-child(3),  .trust__list li:nth-child(3)  { transition-delay: 120ms; }
+.stat-grid .stat-card:nth-child(4),  .steps .step:nth-child(4),  .journey>li:nth-child(4),  .chain>li:nth-child(4),  .ladder>li:nth-child(4),  .trust__list li:nth-child(4)  { transition-delay: 180ms; }
+.stat-grid .stat-card:nth-child(5),  .steps .step:nth-child(5),  .journey>li:nth-child(5),  .chain>li:nth-child(5),  .ladder>li:nth-child(5),  .trust__list li:nth-child(5)  { transition-delay: 240ms; }
+.chain>li:nth-child(6),  .trust__list li:nth-child(6)  { transition-delay: 300ms; }
+.chain>li:nth-child(7),  .trust__list li:nth-child(7)  { transition-delay: 360ms; }
+.trust__list li:nth-child(8)  { transition-delay: 420ms; }
+.trust__list li:nth-child(9)  { transition-delay: 480ms; }
+.trust__list li:nth-child(10) { transition-delay: 540ms; }
+.trust__list li:nth-child(11) { transition-delay: 600ms; }
 
 /* ---------- Feature blocks (approach) ---------- */
 .feature {
@@ -447,53 +510,82 @@ a:hover { text-decoration: underline; }
   display: flex; align-items: center; justify-content: center;
   padding: 34px;
   overflow: hidden;
+  transition-delay: .1s; /* visual settles in just after its text */
 }
 
+/* Demand: bars grow up from the baseline, staggered left to right */
 .viz--demand { display: flex; align-items: flex-end; gap: 12px; width: 100%; height: 100%; }
 .viz--demand .viz__bar {
-  flex: 1; height: var(--h);
+  flex: 1; height: 0;
   background: #cfe3fb; border-radius: 8px 8px 4px 4px;
-  transition: height 1s var(--ease);
+  transition: height .9s var(--ease), background-color .4s ease;
 }
 .viz--demand .viz__bar--peak { background: var(--grad); }
+.feature__visual.is-visible .viz--demand .viz__bar { height: var(--h); }
+.viz--demand .viz__bar:nth-child(1) { transition-delay: .05s; }
+.viz--demand .viz__bar:nth-child(2) { transition-delay: .15s; }
+.viz--demand .viz__bar:nth-child(3) { transition-delay: .25s; }
+.viz--demand .viz__bar:nth-child(4) { transition-delay: .35s; }
+.viz--demand .viz__bar:nth-child(5) { transition-delay: .45s; }
+.viz--demand .viz__bar:nth-child(6) { transition-delay: .55s; }
 
+/* Conversion: axes draw in, dots land, the "you" dot pulses */
 .viz--position { position: relative; width: 100%; height: 100%; }
-.viz--position .viz__axis { position: absolute; background: #c9d6e6; }
-.viz--position .viz__axis--x { left: 6%; right: 6%; top: 50%; height: 1.5px; }
-.viz--position .viz__axis--y { top: 6%; bottom: 6%; left: 50%; width: 1.5px; }
+.viz--position .viz__axis { position: absolute; background: #c9d6e6; transition: transform .8s var(--ease); }
+.viz--position .viz__axis--x { left: 6%; right: 6%; top: 50%; height: 1.5px; transform: scaleX(0); transform-origin: left; }
+.viz--position .viz__axis--y { top: 6%; bottom: 6%; left: 50%; width: 1.5px; transform: scaleY(0); transform-origin: top; }
+.feature__visual.is-visible .viz--position .viz__axis--x,
+.feature__visual.is-visible .viz--position .viz__axis--y { transform: none; }
 .viz--position .viz__dot {
   position: absolute; width: 14px; height: 14px; border-radius: 50%;
   background: #b9c6d6;
+  opacity: 0; transform: scale(.3);
+  transition: opacity .5s var(--ease), transform .5s var(--ease);
 }
-.viz--position .viz__dot:nth-child(1) { left: 24%; top: 64%; }
-.viz--position .viz__dot:nth-child(2) { left: 40%; top: 34%; }
+.viz--position .viz__dot:nth-child(1) { left: 24%; top: 64%; transition-delay: .35s; }
+.viz--position .viz__dot:nth-child(2) { left: 40%; top: 34%; transition-delay: .5s; }
 .viz--position .viz__dot--you {
   left: 70%; top: 22%; width: 20px; height: 20px;
   background: var(--grad);
   box-shadow: 0 0 0 6px rgba(0,113,227,.14);
+  transition-delay: .68s;
 }
+.feature__visual.is-visible .viz--position .viz__dot { opacity: 1; transform: scale(1); }
 .viz--position .viz__ring {
   position: absolute; left: 70%; top: 22%;
   width: 20px; height: 20px; border-radius: 50%;
   border: 2px solid var(--brand);
   transform: translate(-3px,-3px);
-  animation: pulse 2.4s var(--ease) infinite;
+  opacity: 0;
+}
+.feature__visual.is-visible .viz--position .viz__ring {
+  opacity: 1;
+  animation: pulse 2.4s var(--ease) .85s infinite;
 }
 @keyframes pulse {
   0% { transform: translate(-3px,-3px) scale(1); opacity: .8; }
   100% { transform: translate(-3px,-3px) scale(3.4); opacity: 0; }
 }
 
+/* Tracking: the line draws, the area fills, the marker lands and signals */
 .viz--growth { width: 100%; height: 100%; }
 .viz--growth svg { width: 100%; height: 100%; overflow: visible; }
 .viz--growth .viz__line {
   stroke: url(#growthGrad); stroke-width: 3.5; stroke-linecap: round;
   stroke-dasharray: 600; stroke-dashoffset: 600;
 }
-.viz--growth.is-visible .viz__line { animation: draw 1.6s var(--ease) forwards; }
+.viz--growth.is-visible .viz__line { animation: draw 1.5s var(--ease) forwards; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 .viz--growth .viz__area { fill: rgba(0,113,227,.10); opacity: 0; transition: opacity .8s ease .8s; }
 .viz--growth.is-visible .viz__area { opacity: 1; }
+.viz--growth .viz__point { fill: #00c4b4; opacity: 0; transition: opacity .3s ease; }
+.viz--growth.is-visible .viz__point { opacity: 1; transition-delay: 1.4s; }
+.viz--growth .viz__pulse { fill: none; stroke: #00c4b4; stroke-width: 2; opacity: 0; }
+.viz--growth.is-visible .viz__pulse { animation: signal 2.2s ease-out 1.5s infinite; }
+@keyframes signal {
+  0%   { r: 5; opacity: .6; }
+  100% { r: 15; opacity: 0; }
+}
 
 /* ---------- Steps (process) ---------- */
 .steps {
