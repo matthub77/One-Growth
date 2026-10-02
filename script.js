@@ -6,15 +6,30 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- Sticky nav shadow on scroll ---------- */
+  /* ---------- Sticky nav shadow + scroll-progress rail ---------- */
   var nav = document.getElementById("nav");
-  if (nav) {
-    var onScroll = function () {
-      nav.classList.toggle("is-scrolled", window.scrollY > 8);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+  var progressBar = document.getElementById("scrollProgressBar");
+  var ticking = false;
+
+  function onScrollFrame() {
+    ticking = false;
+    if (nav) nav.classList.toggle("is-scrolled", window.scrollY > 8);
+    if (progressBar) {
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - doc.clientHeight;
+      var pct = max > 0 ? Math.min(100, Math.max(0, (window.scrollY / max) * 100)) : 0;
+      progressBar.style.width = pct + "%";
+    }
   }
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(onScrollFrame);
+    }
+  }
+  onScrollFrame();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
 
   /* ---------- Mobile menu ---------- */
   var toggle = document.getElementById("navToggle");
@@ -97,6 +112,55 @@
     revealEls.forEach(function (el) {
       io.observe(el);
     });
+  }
+
+  /* ---------- Scrollspy: highlight the nav link for the section in view ---------- */
+  var navLinks = document.querySelectorAll(".nav__links a[href^='#']");
+  if (navLinks.length && "IntersectionObserver" in window) {
+    var linkFor = {};
+    navLinks.forEach(function (a) {
+      linkFor[a.getAttribute("href").slice(1)] = a;
+    });
+    var spySections = Object.keys(linkFor)
+      .map(function (id) { return document.getElementById(id); })
+      .filter(Boolean);
+
+    var spy = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          var link = linkFor[entry.target.id];
+          if (!link) return;
+          if (entry.isIntersecting) {
+            navLinks.forEach(function (a) { a.classList.remove("is-active"); });
+            link.classList.add("is-active");
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    spySections.forEach(function (s) { spy.observe(s); });
+  }
+
+  /* ---------- Ladder: stages fill in progressively as you scroll past ---------- */
+  var ladder = document.querySelector(".ladder");
+  if (ladder && "IntersectionObserver" in window) {
+    var ladderItems = ladder.querySelectorAll("li");
+    var steps = [];
+    for (var s = 0; s <= 20; s++) steps.push(s / 20);
+
+    var ladderIO = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          var ratio = entry.intersectionRatio;
+          var activeCount = Math.ceil(ratio * ladderItems.length);
+          ladderItems.forEach(function (li, i) {
+            li.classList.toggle("is-active", i < activeCount);
+          });
+        });
+      },
+      { threshold: steps }
+    );
+    ladderIO.observe(ladder);
   }
 
   /* ---------- Year ---------- */
