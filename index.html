@@ -93,23 +93,24 @@
   <a href="#practice" class="scroll-cue" aria-hidden="true"><span></span></a>
 </section>
 
-<!-- TRUST -->
-<section class="trust">
+<!-- TRUST / SPECIALITY SELECTOR -->
+<section class="trust" id="expertise">
   <div class="container">
-    <p class="trust__label reveal">For private doctors who run their own practices</p>
-    <ul class="trust__list reveal">
-      <li>General Practice</li>
-      <li>Dermatology</li>
-      <li>Cardiology</li>
-      <li>Gynaecology</li>
-      <li>Psychiatry</li>
-      <li>Paediatrics</li>
-      <li>Orthopaedics</li>
-      <li>Ophthalmology</li>
-      <li>ENT</li>
-      <li>Neurology</li>
-      <li>Urology</li>
-    </ul>
+    <p class="trust__label reveal">What's your area of expertise?</p>
+    <div class="specialities reveal" role="group" aria-label="Select your speciality">
+      <button type="button" class="speciality" data-speciality="General Practice">General Practice</button>
+      <button type="button" class="speciality" data-speciality="Dermatology">Dermatology</button>
+      <button type="button" class="speciality" data-speciality="Cardiology">Cardiology</button>
+      <button type="button" class="speciality" data-speciality="Gynaecology">Gynaecology</button>
+      <button type="button" class="speciality" data-speciality="Psychiatry">Psychiatry</button>
+      <button type="button" class="speciality" data-speciality="Paediatrics">Paediatrics</button>
+      <button type="button" class="speciality" data-speciality="Orthopaedics">Orthopaedics</button>
+      <button type="button" class="speciality" data-speciality="Ophthalmology">Ophthalmology</button>
+      <button type="button" class="speciality" data-speciality="ENT">ENT</button>
+      <button type="button" class="speciality" data-speciality="Neurology">Neurology</button>
+      <button type="button" class="speciality" data-speciality="Urology">Urology</button>
+    </div>
+    <p class="trust__hint" id="specialityHint" role="status" hidden>Noted — we've pre-filled this on the enquiry form below.</p>
   </div>
 </section>
 

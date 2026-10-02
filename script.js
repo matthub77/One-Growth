@@ -163,6 +163,44 @@
     ladderIO.observe(ladder);
   }
 
+  /* ---------- Speciality selector ---------- */
+  var specialityGroup = document.querySelector(".specialities");
+  if (specialityGroup) {
+    var specialityBtns = specialityGroup.querySelectorAll(".speciality");
+    var specialityInput = document.getElementById("speciality");
+    var specialityHint = document.getElementById("specialityHint");
+
+    var selectSpeciality = function (value, persist) {
+      specialityBtns.forEach(function (b) {
+        var match = !!value && b.getAttribute("data-speciality") === value;
+        b.classList.toggle("is-selected", match);
+        b.setAttribute("aria-pressed", String(match));
+      });
+      if (specialityInput) specialityInput.value = value || "";
+      if (specialityHint) specialityHint.hidden = !value;
+      if (persist) {
+        try {
+          if (value) localStorage.setItem("og_speciality", value);
+          else localStorage.removeItem("og_speciality");
+        } catch (e) {}
+      }
+    };
+
+    specialityBtns.forEach(function (btn) {
+      btn.setAttribute("aria-pressed", "false");
+      btn.addEventListener("click", function () {
+        var value = btn.getAttribute("data-speciality");
+        var alreadySelected = btn.classList.contains("is-selected");
+        selectSpeciality(alreadySelected ? null : value, true);
+      });
+    });
+
+    try {
+      var savedSpeciality = localStorage.getItem("og_speciality");
+      if (savedSpeciality) selectSpeciality(savedSpeciality, false);
+    } catch (e) {}
+  }
+
   /* ---------- Year ---------- */
   var yr = document.getElementById("year");
   if (yr) yr.textContent = new Date().getFullYear();

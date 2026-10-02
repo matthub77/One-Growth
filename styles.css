@@ -274,20 +274,53 @@ a:hover { text-decoration: underline; }
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   background: var(--bg-alt);
-  padding: 40px 0;
+  padding: 44px 0;
 }
 .trust__label {
-  text-align: center; font-size: .9rem; color: var(--ink-faint);
-  margin-bottom: 18px;
+  text-align: center; font-size: 1rem; font-weight: 600; color: var(--ink);
+  margin-bottom: 20px;
 }
-.trust__list {
-  list-style: none;
+
+/* ---------- Speciality selector ---------- */
+.specialities {
   display: flex; flex-wrap: wrap; justify-content: center;
-  gap: 14px 36px;
+  gap: 10px 12px;
 }
-.trust__list li {
-  font-weight: 600; font-size: 1rem; color: var(--ink-soft);
+.speciality {
+  font: inherit; font-weight: 600; font-size: .92rem;
   letter-spacing: -.01em;
+  color: var(--ink-soft);
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 980px;
+  padding: 9px 17px;
+  cursor: pointer;
+  /* full transition (incl. the entrance opacity/transform) is set once,
+     on the higher-specificity .specialities > .speciality rule below */
+}
+.speciality:hover {
+  border-color: var(--brand);
+  color: var(--ink);
+}
+.speciality:active { transform: scale(.96); }
+.speciality:focus-visible {
+  outline: 2px solid var(--brand); outline-offset: 2px;
+}
+.speciality.is-selected {
+  border-color: #16A34A;
+  color: #15803D;
+  background: #F0FDF4;
+  box-shadow: 0 0 0 3px rgba(22,163,74,.16);
+}
+.speciality.is-selected::after {
+  content: "✓";
+  margin-left: 7px;
+  font-weight: 700;
+}
+
+.trust__hint {
+  text-align: center; margin-top: 18px;
+  font-size: .88rem; font-weight: 500; color: #15803D;
 }
 
 /* ============================================================
@@ -438,7 +471,7 @@ a:hover { text-decoration: underline; }
    The group itself (already a .reveal) becomes the trigger; each
    item animates independently and in sequence once it's visible. */
 .stat-grid.reveal, .steps.reveal, .journey.reveal,
-.chain.reveal, .ladder.reveal, .trust__list.reveal {
+.chain.reveal, .ladder.reveal, .specialities.reveal {
   opacity: 1 !important; transform: none !important;
 }
 .stat-grid .stat-card,
@@ -446,29 +479,31 @@ a:hover { text-decoration: underline; }
 .journey > li,
 .chain > li,
 .ladder > li,
-.trust__list li {
+.specialities > .speciality {
   opacity: 0; transform: translateY(14px);
-  transition: opacity .55s var(--ease), transform .55s var(--ease);
+  transition: opacity .55s var(--ease), transform .35s var(--ease),
+              border-color .25s var(--ease), color .25s var(--ease),
+              background-color .25s var(--ease), box-shadow .25s var(--ease);
 }
 .stat-grid.is-visible .stat-card,
 .steps.is-visible .step,
 .journey.is-visible > li,
 .chain.is-visible > li,
 .ladder.is-visible > li,
-.trust__list.is-visible li {
+.specialities.is-visible > .speciality {
   opacity: 1; transform: none;
 }
-.stat-grid .stat-card:nth-child(1),  .steps .step:nth-child(1),  .journey>li:nth-child(1),  .chain>li:nth-child(1),  .ladder>li:nth-child(1),  .trust__list li:nth-child(1)  { transition-delay: 0ms;   }
-.stat-grid .stat-card:nth-child(2),  .steps .step:nth-child(2),  .journey>li:nth-child(2),  .chain>li:nth-child(2),  .ladder>li:nth-child(2),  .trust__list li:nth-child(2)  { transition-delay: 60ms;  }
-.stat-grid .stat-card:nth-child(3),  .steps .step:nth-child(3),  .journey>li:nth-child(3),  .chain>li:nth-child(3),  .ladder>li:nth-child(3),  .trust__list li:nth-child(3)  { transition-delay: 120ms; }
-.stat-grid .stat-card:nth-child(4),  .steps .step:nth-child(4),  .journey>li:nth-child(4),  .chain>li:nth-child(4),  .ladder>li:nth-child(4),  .trust__list li:nth-child(4)  { transition-delay: 180ms; }
-.stat-grid .stat-card:nth-child(5),  .steps .step:nth-child(5),  .journey>li:nth-child(5),  .chain>li:nth-child(5),  .ladder>li:nth-child(5),  .trust__list li:nth-child(5)  { transition-delay: 240ms; }
-.chain>li:nth-child(6),  .trust__list li:nth-child(6)  { transition-delay: 300ms; }
-.chain>li:nth-child(7),  .trust__list li:nth-child(7)  { transition-delay: 360ms; }
-.trust__list li:nth-child(8)  { transition-delay: 420ms; }
-.trust__list li:nth-child(9)  { transition-delay: 480ms; }
-.trust__list li:nth-child(10) { transition-delay: 540ms; }
-.trust__list li:nth-child(11) { transition-delay: 600ms; }
+.stat-grid .stat-card:nth-child(1),  .steps .step:nth-child(1),  .journey>li:nth-child(1),  .chain>li:nth-child(1),  .ladder>li:nth-child(1),  .specialities>.speciality:nth-child(1)  { transition-delay: 0ms;   }
+.stat-grid .stat-card:nth-child(2),  .steps .step:nth-child(2),  .journey>li:nth-child(2),  .chain>li:nth-child(2),  .ladder>li:nth-child(2),  .specialities>.speciality:nth-child(2)  { transition-delay: 60ms;  }
+.stat-grid .stat-card:nth-child(3),  .steps .step:nth-child(3),  .journey>li:nth-child(3),  .chain>li:nth-child(3),  .ladder>li:nth-child(3),  .specialities>.speciality:nth-child(3)  { transition-delay: 120ms; }
+.stat-grid .stat-card:nth-child(4),  .steps .step:nth-child(4),  .journey>li:nth-child(4),  .chain>li:nth-child(4),  .ladder>li:nth-child(4),  .specialities>.speciality:nth-child(4)  { transition-delay: 180ms; }
+.stat-grid .stat-card:nth-child(5),  .steps .step:nth-child(5),  .journey>li:nth-child(5),  .chain>li:nth-child(5),  .ladder>li:nth-child(5),  .specialities>.speciality:nth-child(5)  { transition-delay: 240ms; }
+.chain>li:nth-child(6),  .specialities>.speciality:nth-child(6)  { transition-delay: 300ms; }
+.chain>li:nth-child(7),  .specialities>.speciality:nth-child(7)  { transition-delay: 360ms; }
+.specialities>.speciality:nth-child(8)  { transition-delay: 420ms; }
+.specialities>.speciality:nth-child(9)  { transition-delay: 480ms; }
+.specialities>.speciality:nth-child(10) { transition-delay: 540ms; }
+.specialities>.speciality:nth-child(11) { transition-delay: 600ms; }
 
 /* ---------- Feature blocks (approach) ---------- */
 .feature {
@@ -823,5 +858,6 @@ a:hover { text-decoration: underline; }
   .chain li { white-space: normal; text-align: center; }
   .cta__form { grid-template-columns: 1fr; padding: 22px; }
   .footer__legal { margin-left: 0; width: 100%; }
-  .trust__list { gap: 10px 20px; }
+  .specialities { gap: 8px 10px; }
+  .speciality { font-size: .86rem; padding: 8px 14px; }
 }
